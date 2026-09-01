@@ -24,3 +24,6 @@ Public read for GetObject
 - How S3 static hosting works
 - Difference between S3 endpoint vs Website endpoint
 - How to make bucket public safely
+
+## Architecture Diagram
+![Diagram](./aws_s3_static_website_diagram.jpg)

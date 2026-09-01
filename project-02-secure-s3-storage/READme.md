@@ -17,12 +17,10 @@ Create a private and secure S3 bucket for company documents.
 5. Tested upload/download
 
 ## Security Features
-- No public access
-- Encryption at rest
-- Versioning enabled
-- MFA Delete (concept learned)
+- Block Public Access: ON
+- Versioning Enabled
+- Encryption Enabled
+- No Public Policy
 
-## What I Learned
-- How to make S3 truly private
-- Why versioning is important
-- Encryption types in S3
+## Architecture Diagram
+![Diagram](./secure_s3_architecture_diagram.jpg)

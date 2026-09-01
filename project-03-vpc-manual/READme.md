@@ -31,3 +31,6 @@ Internet -> IGW -> Public Subnet -> Route Table
 - Public vs Private Subnet difference
 - How Internet Gateway works
 - Route Tables explained
+
+## Architecture Diagram
+![Diagram](./custom_vpc_architecture_diagram.jpg)
