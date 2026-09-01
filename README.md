@@ -5,6 +5,10 @@
 
 ### 📌 My Main Work
 **[aws-junior-portfolio](https://github.com/shubham00492/aws-junior-portfolio)** - 6 Projects | 100% Terraform | Free Tier
+## Projects
+1. Ice Cream Shop Static Website (S3) - [View](./project-01-icecream-s3-website/)
+2. Secure S3 Storage - [View](./project-02-secure-s3-storage/)
+3. Custom VPC - [View](./project-03-vpc-manual/)
 
 ### 🚀 Projects Roadmap (4-8 Sept Holiday)
 
