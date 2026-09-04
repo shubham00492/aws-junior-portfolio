@@ -10,12 +10,12 @@
 2. Secure S3 Storage - [View](./project-02-secure-s3-storage/)
 3. Custom VPC - [View](./project-03-vpc-manual/)
 
-### 🚀 Projects Roadmap (4-8 Sept Holiday)
+### 🚀 Projects Roadmap 
 
 | # | Project | Status | Live Demo | Tech |
 |---|---------|--------|-----------|------|
 | 01 | Ice Cream S3 Static Website | Done | [Link](http://shubhamicecream-bucket.s3-website.ap-south-1.amazonaws.com) | S3, Bucket Policy |
-| 02 | Secure S3 + IAM Least Privilege | ⏳ Todo | - | IAM, CLI, Versioning |
+| 02 | Secure S3 + IAM Least Privilege | Done | - | IAM, CLI, Versioning |
 | 03 | 3-Tier VPC (Manual + Terraform) | ⏳ Todo | - | VPC, IGW, NAT, EC2 |
 | 04 | ALB + ASG | ⏳ Todo | - | ALB, ASG |
 | 05 | Serverless S3->Lambda | ⏳ Todo | - | Lambda |
