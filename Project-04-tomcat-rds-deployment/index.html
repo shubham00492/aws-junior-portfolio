@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2-Tier Java App on AWS — Shubham Jain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0f17;
+    --panel: #121826;
+    --panel-2: #171f30;
+    --border: #232d42;
+    --text: #e7ebf3;
+    --muted: #8994ab;
+    --accent: #46d3c4;
+    --accent-dim: #2a4744;
+    --amber: #f0ad4e;
+    --amber-dim: #4a3a1e;
+    --line: #1c2536;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Space Grotesk', sans-serif;
+    line-height:1.55;
+  }
+  code, .mono{ font-family:'JetBrains Mono', monospace; }
+
+  a{ color:var(--accent); }
+
+  .layout{
+    display:grid;
+    grid-template-columns: 240px 1fr;
+    min-height:100vh;
+  }
+
+  /* SIDEBAR */
+  nav.side{
+    position:sticky; top:0; height:100vh;
+    border-right:1px solid var(--line);
+    padding:32px 20px;
+    display:flex; flex-direction:column; gap:28px;
+  }
+  .brand{
+    font-size:15px; font-weight:600; letter-spacing:.2px;
+  }
+  .brand span{ color:var(--accent); }
+  .side-links{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:4px; }
+  .side-links a{
+    display:block; color:var(--muted); text-decoration:none;
+    font-size:13.5px; padding:7px 10px; border-radius:6px;
+  }
+  .side-links a:hover{ color:var(--text); background:var(--panel); }
+  .side-foot{ margin-top:auto; font-size:12px; color:var(--muted); }
+  .side-foot a{ color:var(--muted); }
+
+  main{ padding: 56px 48px 100px; max-width:920px; }
+
+  /* HERO */
+  .eyebrow{ color:var(--accent); font-size:13px; font-family:'JetBrains Mono',monospace; margin-bottom:14px; }
+  h1{ font-size:44px; line-height:1.1; margin:0 0 14px; font-weight:600; max-width: 14ch; }
+  .sub{ color:var(--muted); font-size:17px; max-width:60ch; margin-bottom:28px; }
+  .meta-row{ display:flex; gap:22px; flex-wrap:wrap; margin-bottom:44px; }
+  .meta-item{ font-size:13px; color:var(--muted); }
+  .meta-item b{ color:var(--text); display:block; font-size:14px; margin-bottom:2px; }
+
+  section{ margin-bottom:76px; scroll-margin-top: 30px;}
+  h2{ font-size:24px; margin:0 0 6px; font-weight:600; }
+  .section-note{ color:var(--muted); font-size:14.5px; margin-bottom:26px; max-width: 64ch;}
+
+  /* ARCHITECTURE */
+  .arch-wrap{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:28px; }
+  .arch-svg{ width:100%; height:auto; display:block; }
+  .arch-node{ cursor:pointer; }
+  .arch-node rect{ transition: stroke .15s, filter .15s; }
+  .arch-node:hover rect, .arch-node.active rect{ stroke:var(--accent); filter:drop-shadow(0 0 6px rgba(70,211,196,.35)); }
+  .arch-detail{
+    margin-top:20px; border-top:1px solid var(--line); padding-top:18px;
+    font-size:14px; color:var(--muted);
+  }
+  .arch-detail b{ color:var(--text); }
+  .arch-detail ul{ margin:10px 0 0; padding-left:18px; }
+  .arch-detail li{ margin-bottom:4px; }
+
+  /* STEPS */
+  .step{
+    border:1px solid var(--line); border-radius:10px; margin-bottom:10px; overflow:hidden;
+    background:var(--panel);
+  }
+  .step-head{
+    display:flex; align-items:center; gap:14px; padding:16px 18px; cursor:pointer; user-select:none;
+  }
+  .step-num{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--bg);
+    background:var(--accent); width:24px; height:24px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .step-title{ font-size:15.5px; font-weight:500; flex:1; }
+  .step-chevron{ color:var(--muted); transition: transform .2s; font-size:13px; }
+  .step.open .step-chevron{ transform: rotate(90deg); }
+  .step-body{ max-height:0; overflow:hidden; transition: max-height .25s ease; }
+  .step.open .step-body{ max-height:600px; }
+  .step-body-inner{ padding:0 18px 20px 56px; }
+  .step-desc{ color:var(--muted); font-size:14px; margin-bottom:12px; }
+  .code-block{
+    background:#080b12; border:1px solid var(--line); border-radius:8px;
+    font-family:'JetBrains Mono',monospace; font-size:12.8px; color:#c8e6e0;
+    padding:14px 16px; white-space:pre-wrap; word-break:break-all; position:relative;
+  }
+  .copy-btn{
+    position:absolute; top:8px; right:8px; background:var(--panel-2); border:1px solid var(--line);
+    color:var(--muted); font-size:11px; padding:4px 9px; border-radius:5px; cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .copy-btn:hover{ color:var(--text); border-color:var(--accent); }
+
+  /* ISSUES */
+  .issue{
+    border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:8px;
+    background:var(--panel); padding:16px 18px; margin-bottom:12px;
+  }
+  .issue-title{ font-weight:600; font-size:14.5px; margin-bottom:8px; }
+  .issue-row{ display:flex; gap:10px; font-size:13.5px; margin-bottom:6px; }
+  .issue-tag{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--amber); flex-shrink:0; width:70px; padding-top:1px; }
+  .issue-row.fix .issue-tag{ color:var(--accent); }
+  .issue-text{ color:var(--muted); }
+
+  /* LEARNINGS */
+  .learn-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .learn-item{
+    display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--muted);
+    background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+  }
+  .learn-item svg{ flex-shrink:0; margin-top:2px; }
+
+  /* TECH STACK */
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--text);
+    border:1px solid var(--line); background:var(--panel); padding:7px 13px; border-radius:20px;
+  }
+
+  /* RESUME */
+  .resume-box{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:22px 24px; position:relative;
+  }
+  .resume-box ul{ margin:0; padding-left:20px; color:var(--text); font-size:14.5px; }
+  .resume-box li{ margin-bottom:10px; }
+  .resume-copy{
+    position:absolute; top:18px; right:18px; background:var(--accent); color:#06110f;
+    border:none; font-weight:600; font-size:12.5px; padding:8px 14px; border-radius:6px; cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .resume-copy:hover{ opacity:.88; }
+
+  footer{ border-top:1px solid var(--line); padding-top:28px; color:var(--muted); font-size:13px; }
+
+  @media (max-width: 860px){
+    .layout{ grid-template-columns: 1fr; }
+    nav.side{ position:relative; height:auto; flex-direction:row; align-items:center; padding:14px 16px; overflow-x:auto; gap:18px; }
+    .brand{ white-space:nowrap; flex-shrink:0; font-size:13px; }
+    .side-links{ flex-direction:row; flex-shrink:0; }
+    .side-links a{ white-space:nowrap; padding:6px 8px; }
+    .side-foot{ display:none; }
+    main{ padding:36px 20px 80px; }
+    h1{ font-size:32px; }
+    .learn-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <nav class="side">
+    <div class="brand">Shubham Jain<br><span>/ tomcat-rds-deploy</span></div>
+    <ul class="side-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#steps">Build steps</a></li>
+      <li><a href="#issues">Issues & fixes</a></li>
+      <li><a href="#learnings">Key learnings</a></li>
+      <li><a href="#stack">Tech stack</a></li>
+      <li><a href="#resume">Resume bullets</a></li>
+    </ul>
+    <div class="side-foot">
+      Edit the links in the footer of this page with your own GitHub / LinkedIn before publishing.
+    </div>
+  </nav>
+
+  <main>
+    <section id="overview">
+      <div class="eyebrow">// project documentation</div>
+      <h1>2-Tier Java Web App, deployed on AWS</h1>
+      <p class="sub">A Java web application deployed on Apache Tomcat (EC2) with an AWS RDS MySQL backend, connected over an SSL-secured JDBC pool inside a configured VPC.</p>
+      <div class="meta-row">
+        <div class="meta-item"><b>Application tier</b>EC2 · Amazon Linux 2023 · Tomcat 9.0.117</div>
+        <div class="meta-item"><b>Data tier</b>RDS MySQL · db.t3.micro</div>
+        <div class="meta-item"><b>Connectivity</b>SSL-secured JDBC via MySQL Connector</div>
+        <div class="meta-item"><b>Prepared</b>April 2026</div>
+      </div>
+      <p class="section-note">This project demonstrates deploying a two-tier web application on AWS: the application tier runs a Java WAR artifact on Apache Tomcat, and the data tier is a fully managed RDS MySQL instance. Below is the architecture, the full build process, real issues hit along the way, and what came out of it.</p>
+    </section>
+
+    <section id="architecture">
+      <h2>Architecture</h2>
+      <p class="section-note">Click a component to see how it's configured.</p>
+      <div class="arch-wrap">
+        <svg class="arch-svg" viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">
+          <line x1="150" y1="110" x2="290" y2="110" stroke="#2a3450" stroke-width="2"/>
+          <line x1="430" y1="110" x2="560" y2="110" stroke-dasharray="5,5" stroke="#2a3450" stroke-width="2"/>
+          <text x="205" y="100" fill="#6b7690" font-size="11" font-family="JetBrains Mono, monospace">:8080</text>
+          <text x="460" y="100" fill="#6b7690" font-size="11" font-family="JetBrains Mono, monospace">SSL :3306</text>
+
+          <g class="arch-node" data-node="client" transform="translate(30,70)">
+            <rect width="120" height="80" rx="10" fill="#121826" stroke="#232d42" stroke-width="1.5"/>
+            <text x="60" y="35" text-anchor="middle" fill="#e7ebf3" font-size="13" font-family="Space Grotesk">Browser</text>
+            <text x="60" y="55" text-anchor="middle" fill="#8994ab" font-size="10.5" font-family="JetBrains Mono, monospace">client</text>
+          </g>
+
+          <g class="arch-node" data-node="ec2" transform="translate(290,55)">
+            <rect width="140" height="110" rx="10" fill="#121826" stroke="#232d42" stroke-width="1.5"/>
+            <text x="70" y="32" text-anchor="middle" fill="#e7ebf3" font-size="13" font-family="Space Grotesk">EC2</text>
+            <text x="70" y="52" text-anchor="middle" fill="#46d3c4" font-size="10.5" font-family="JetBrains Mono, monospace">Apache Tomcat</text>
+            <text x="70" y="70" text-anchor="middle" fill="#8994ab" font-size="10" font-family="JetBrains Mono, monospace">Amazon Linux 2023</text>
+            <text x="70" y="86" text-anchor="middle" fill="#8994ab" font-size="10" font-family="JetBrains Mono, monospace">t2.micro</text>
+          </g>
+
+          <g class="arch-node" data-node="rds" transform="translate(560,55)">
+            <rect width="140" height="110" rx="10" fill="#121826" stroke="#232d42" stroke-width="1.5"/>
+            <text x="70" y="32" text-anchor="middle" fill="#e7ebf3" font-size="13" font-family="Space Grotesk">RDS</text>
+            <text x="70" y="52" text-anchor="middle" fill="#46d3c4" font-size="10.5" font-family="JetBrains Mono, monospace">MySQL</text>
+            <text x="70" y="70" text-anchor="middle" fill="#8994ab" font-size="10" font-family="JetBrains Mono, monospace">db.t3.micro</text>
+            <text x="70" y="86" text-anchor="middle" fill="#8994ab" font-size="10" font-family="JetBrains Mono, monospace">Free Tier</text>
+          </g>
+        </svg>
+
+        <div class="arch-detail" id="archDetail">
+          <b>Click a node above</b> — Browser, EC2, or RDS — to see its configuration.
+        </div>
+      </div>
+    </section>
+
+    <section id="steps">
+      <h2>Build steps</h2>
+      <p class="section-note">Ten steps, in the order they were actually run.</p>
+      <div id="stepsList"></div>
+    </section>
+
+    <section id="issues">
+      <h2>Issues & fixes</h2>
+      <p class="section-note">Five real problems hit during deployment, and how each was diagnosed and resolved.</p>
+      <div id="issuesList"></div>
+    </section>
+
+    <section id="learnings">
+      <h2>Key learnings</h2>
+      <div class="learn-grid" id="learnGrid"></div>
+    </section>
+
+    <section id="stack">
+      <h2>Tech stack</h2>
+      <div class="chips">
+        <span class="chip">AWS EC2</span>
+        <span class="chip">AWS RDS</span>
+        <span class="chip">Apache Tomcat</span>
+        <span class="chip">Java</span>
+        <span class="chip">MySQL</span>
+        <span class="chip">JDBC</span>
+        <span class="chip">Linux</span>
+        <span class="chip">Maven</span>
+        <span class="chip">Security Groups</span>
+        <span class="chip">SSL/TLS</span>
+      </div>
+    </section>
+
+    <section id="resume">
+      <h2>Resume bullet points</h2>
+      <p class="section-note">Ready to paste under Projects.</p>
+      <div class="resume-box">
+        <button class="resume-copy" onclick="copyResume()">Copy all</button>
+        <ul id="resumeList"></ul>
+      </div>
+    </section>
+
+    <footer>
+      <a href="https://github.com/" target="_blank">GitHub</a> · <a href="https://www.linkedin.com/" target="_blank">LinkedIn</a> · Built from a hands-on AWS deployment, documented step by step.
+    </footer>
+  </main>
+</div>
+
+<script>
+  // ---- Architecture detail panel ----
+  const archData = {
+    client: {
+      title: "Browser (client)",
+      points: [
+        "Connects to the EC2 public IP on port 8080",
+        "First hits Tomcat's default landing page to confirm the server is reachable",
+        "Then hits <code>/student</code> to load the deployed WAR application"
+      ]
+    },
+    ec2: {
+      title: "EC2 — Apache Tomcat 9.0.117",
+      points: [
+        "AMI: Amazon Linux 2023, Instance type: t2.micro (Free Tier)",
+        "Java (OpenJDK) installed as a prerequisite for Tomcat",
+        "Tomcat extracted to <code>/opt</code>, started via <code>catalina.sh</code>",
+        "WAR file dropped into <code>webapps/</code> for auto-deployment",
+        "context.xml holds the JDBC DataSource pointing at RDS"
+      ]
+    },
+    rds: {
+      title: "RDS — MySQL",
+      points: [
+        "Engine: MySQL, Instance class: db.t3.micro (Free Tier)",
+        "<code>require_secure_transport = ON</code> — SSL enforced on all connections",
+        "Storage autoscaling disabled to control cost",
+        "Database <code>studentapp</code> created and used by the deployed app"
+      ]
+    }
+  };
+  document.querySelectorAll('.arch-node').forEach(node => {
+    node.addEventListener('click', () => {
+      document.querySelectorAll('.arch-node').forEach(n => n.classList.remove('active'));
+      node.classList.add('active');
+      const d = archData[node.dataset.node];
+      document.getElementById('archDetail').innerHTML =
+        `<b>${d.title}</b><ul>${d.points.map(p => `<li>${p}</li>`).join('')}</ul>`;
+    });
+  });
+
+  // ---- Steps ----
+  const steps = [
+    {t:"Configure the RDS database", d:"Created a MySQL RDS instance, Free Tier eligible, with SSL required and storage autoscaling off to control cost.", c:null},
+    {t:"Set up the Security Group", d:"Opened only the ports actually needed: SSH for management, 8080 for the app, 3306 for the database.", c:"Port 22 (SSH)  — remote access to EC2\nPort 8080 (TCP) — Tomcat web application\nPort 3306 (TCP) — MySQL / RDS connectivity"},
+    {t:"Launch the EC2 instance", d:"Amazon Linux 2023 on a t2.micro instance in us-east-1, with a public IP for external access.", c:null},
+    {t:"Install Java and Tomcat", d:"Java is a prerequisite for Tomcat. Downloaded the official Tomcat 9.0.117 binary and extracted it to /opt.", c:"yum install java-openjdk -y\njava -version\n\ncurl -O https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.117/bin/apache-tomcat-9.0.117.tar.gz\ntar -xzvf apache-tomcat-9.0.117.tar.gz -C /opt"},
+    {t:"Start and verify Tomcat", d:"Started the service via catalina.sh, then confirmed the default Tomcat page loaded on port 8080.", c:"chmod +x /opt/apache-tomcat-9.0.117/bin/catalina.sh\n/opt/apache-tomcat-9.0.117/bin/catalina.sh start\n\n# verify in browser:\nhttp://[ec2-public-ip]:8080"},
+    {t:"Deploy the WAR file", d:"The WAR is the build artifact from the developer's Maven build. Dropped it into Tomcat's webapps directory for auto-deployment.", c:"cd /opt/apache-tomcat-9.0.117/webapps\ncurl -O https://s3-us-west-2.amazonaws.com/studentapi-cit/student.war\nls /opt/apache-tomcat-9.0.117/webapps/\n\n# verify:\nhttp://[ec2-public-ip]:8080/student"},
+    {t:"Install the MariaDB client & connect to RDS", d:"Installed a MySQL-compatible client on EC2, then connected to RDS with SSL — required because require_secure_transport is enforced.", c:"yum install mariadb105 -y\nsystemctl start mariadb.service\n\nmysql -h [rds-endpoint] -u admin -p --ssl"},
+    {t:"Create the application database", d:"Created the studentapp database that the deployed application reads and writes to.", c:"CREATE DATABASE studentapp;\nUSE studentapp;\nSHOW TABLES;"},
+    {t:"Wire Tomcat to RDS", d:"Added the MySQL Connector JAR (the JDBC driver) to Tomcat's lib folder, then configured the DataSource in context.xml.", c:"cd /opt/apache-tomcat-9.0.117/lib\ncurl -O https://s3-us-west-2.amazonaws.com/studentapi-cit/mysql-connector.jar\n\n# context.xml\n<Resource name=\"jdbc/TestDB\" auth=\"Container\" type=\"javax.sql.DataSource\"\n   maxTotal=\"500\" maxIdle=\"30\" maxWaitMillis=\"1000\"\n   username=\"[db-user]\" password=\"[db-pass]\"\n   driverClassName=\"com.mysql.jdbc.Driver\"\n   url=\"jdbc:mysql://[rds-endpoint]:3306/studentapp?useUnicode=yes&characterEncoding=utf8\"/>"},
+    {t:"Restart Tomcat and verify end to end", d:"Restarted Tomcat and tailed the log to confirm it started cleanly and connected to RDS without errors.", c:"/opt/apache-tomcat-9.0.117/bin/catalina.sh start\ntail -f /opt/apache-tomcat-9.0.117/logs/catalina.out"}
+  ];
+  const stepsList = document.getElementById('stepsList');
+  steps.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'step';
+    el.innerHTML = `
+      <div class="step-head" onclick="this.parentElement.classList.toggle('open')">
+        <div class="step-num">${i+1}</div>
+        <div class="step-title">${s.t}</div>
+        <div class="step-chevron">&#9656;</div>
+      </div>
+      <div class="step-body">
+        <div class="step-body-inner">
+          <div class="step-desc">${s.d}</div>
+          ${s.c ? `<div class="code-block"><button class="copy-btn" onclick="copyCode(this)">copy</button><code>${s.c.replace(/</g,'&lt;')}</code></div>` : ''}
+        </div>
+      </div>`;
+    stepsList.appendChild(el);
+  });
+  function copyCode(btn){
+    const text = btn.parentElement.querySelector('code').innerText;
+    navigator.clipboard.writeText(text);
+    btn.innerText = 'copied';
+    setTimeout(()=> btn.innerText = 'copy', 1200);
+  }
+
+  // ---- Issues ----
+  const issues = [
+    {t:"Wrong Tomcat version path", p:"Commands referenced /opt/apache-tomcat-8.5.88/ but v9.0.117 was installed.", f:"Located the correct path with find /opt -name catalina.sh"},
+    {t:"Space in the context.xml DB URL", p:"The JDBC URL had a leading space after 3306/, causing an \"Unknown database\" error.", f:"Edited context.xml and removed the stray space from the connection string."},
+    {t:"RDS SSL requirement", p:"ERROR 3159 — connections using insecure transport are prohibited.", f:"Added the --ssl flag to every MySQL CLI command."},
+    {t:"Port 8080 already in use", p:"java.net.BindException — an old Tomcat process was still running after restart.", f:"Ran pkill -f tomcat, waited, then restarted cleanly."},
+    {t:"Database not created on RDS", p:"The studentapp database referenced in context.xml didn't exist yet on the RDS server.", f:"Connected via the MySQL CLI over SSL and ran CREATE DATABASE studentapp;"}
+  ];
+  const issuesList = document.getElementById('issuesList');
+  issues.forEach(i => {
+    const el = document.createElement('div');
+    el.className = 'issue';
+    el.innerHTML = `
+      <div class="issue-title">${i.t}</div>
+      <div class="issue-row"><span class="issue-tag">PROBLEM</span><span class="issue-text">${i.p}</span></div>
+      <div class="issue-row fix"><span class="issue-tag">FIX</span><span class="issue-text">${i.f}</span></div>`;
+    issuesList.appendChild(el);
+  });
+
+  // ---- Learnings ----
+  const learnings = [
+    "Designed and deployed a 2-tier cloud architecture on AWS from scratch",
+    "Deployed Java WAR artifacts to Apache Tomcat on Amazon Linux",
+    "Configured JDBC connection pooling in context.xml for RDS connectivity",
+    "Enforced SSL-secured database connections between EC2 and RDS",
+    "Applied least-privilege Security Group rules for port access",
+    "Used catalina.out logs to diagnose and resolve Tomcat startup errors",
+    "Applied Linux diagnostic commands: find, pkill, netstat, lsof, grep"
+  ];
+  const checkSvg = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#46d3c4" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="#46d3c4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const learnGrid = document.getElementById('learnGrid');
+  learnings.forEach(l => {
+    const el = document.createElement('div');
+    el.className = 'learn-item';
+    el.innerHTML = `${checkSvg}<span>${l}</span>`;
+    learnGrid.appendChild(el);
+  });
+
+  // ---- Resume ----
+  const resumeBullets = [
+    "Deployed Java web application on Apache Tomcat 9.x on AWS EC2 (Amazon Linux 2023)",
+    "Configured AWS RDS MySQL as backend with SSL-enforced secure connectivity",
+    "Deployed student.war artifact and integrated MySQL Connector JAR for DB-app communication",
+    "Configured JDBC DataSource connection pooling via Tomcat context.xml",
+    "Managed AWS Security Groups for controlled port access (22, 8080, 3306)",
+    "Diagnosed and resolved real-world issues: port conflicts, SSL errors, DB connection failures"
+  ];
+  const resumeList = document.getElementById('resumeList');
+  resumeBullets.forEach(b => {
+    const li = document.createElement('li');
+    li.innerText = b;
+    resumeList.appendChild(li);
+  });
+  function copyResume(){
+    navigator.clipboard.writeText(resumeBullets.map(b=>'• '+b).join('\n'));
+    const btn = document.querySelector('.resume-copy');
+    btn.innerText = 'Copied!';
+    setTimeout(()=> btn.innerText = 'Copy all', 1200);
+  }
+</script>
+</body>
+</html>

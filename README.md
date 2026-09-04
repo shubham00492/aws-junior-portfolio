@@ -1,32 +1,20 @@
-# Hi, I'm Shubham 👋 | AWS Cloud Engineer Aspirant - Pune
+# AWS Junior Portfolio — Shubham Jain
 
-🎯 **Looking for:** Junior AWS Cloud Engineer / Cloud Support - Hinjewadi, Baner, Kharadi  
-🛠️ **I build with:** AWS | Terraform | Linux | Docker
+Hands-on AWS projects, each documented with the architecture, the exact steps taken, issues hit along the way, and what I learned. Built to demonstrate practical cloud/DevOps skills rather than just certifications.
 
-### 📌 My Main Work
-**[aws-junior-portfolio](https://github.com/shubham00492/aws-junior-portfolio)** - 6 Projects | 100% Terraform | Free Tier
+📫 [www.linkedin.com/in/shubham-jain-868a11352](#) · 📄 [Resume](#)
+
 ## Projects
-1. Ice Cream Shop Static Website (S3) - [View](./project-01-icecream-s3-website/)
-2. Secure S3 Storage - [View](./project-02-secure-s3-storage/)
-3. Custom VPC - [View](./project-03-vpc-manual/)
 
-### 🚀 Projects Roadmap 
+| # | Project | What it covers | Tech |
+|---|---------|-----------------|------|
+| 01 | [Ice Cream S3 Website](./project-01-icecream-s3-website) | Static website hosting on S3 | S3, Static Web Hosting |
+| 02 | [Secure S3 Storage](./project-02-secure-s3-storage) | Locking down S3 storage for company data — bucket policies, encryption, access control | S3, IAM, Bucket Policies |
+| 03 | [VPC Manual Setup](./project-03-vpc-manual) | Building a VPC by hand — subnets, route tables, gateways | VPC, Networking |
+| 04 | [Tomcat + RDS Deployment](./project-04-tomcat-rds-deployment) | 2-tier Java app on EC2/Tomcat with an SSL-secured RDS MySQL backend | EC2, RDS, Tomcat, JDBC |
 
-| # | Project | Status | Live Demo | Tech |
-|---|---------|--------|-----------|------|
-| 01 | Ice Cream S3 Static Website | Done | [Link](http://shubhamicecream-bucket.s3-website.ap-south-1.amazonaws.com) | S3, Bucket Policy |
-| 02 | Secure S3 + IAM Least Privilege | Done | - | IAM, CLI, Versioning |
-| 03 | 3-Tier VPC (Manual + Terraform) | ⏳ Todo | - | VPC, IGW, NAT, EC2 |
-| 04 | ALB + ASG | ⏳ Todo | - | ALB, ASG |
-| 05 | Serverless S3->Lambda | ⏳ Todo | - | Lambda |
-| 06 | Cost Optimizer | ⏳ Todo | - | Budgets, SNS |
+Each project folder has its own README with the full write-up, an architecture diagram, and screenshots.
 
-All projects with: `terraform apply` -> Screenshot -> `terraform destroy` -> $0 Cost
+## About me
 
-### 📸 Proof (Will update daily 4-8 Sept)
-- Day 1: S3 Website Live Screenshot
-- Day 2: VPC + Bastion Host Jump
-- Day 3: ALB DNS Working
-
-### 📜 Cert: AWS Cloud Practitioner (Sep 2025) -> SAA-C03 next
-📍 Pune | Open to work
+Junior cloud/DevOps engineer, hands-on with AWS. Currently building out this portfolio one real project at a time — replacing tutorials with things I've actually deployed, broken, and fixed myself.
