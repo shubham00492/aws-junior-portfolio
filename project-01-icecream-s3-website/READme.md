@@ -18,7 +18,7 @@ Host a static website for an ice cream shop using AWS S3.
 Public read for GetObject
 
 ## Website URL
-(Will add after deployment)
+http://shubhamicecream-bucket.s3-website.ap-south-1.amazonaws.com 
 
 ## What I Learned
 - How S3 static hosting works
