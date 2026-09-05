@@ -13,8 +13,7 @@
 
 > Deployed Java WAR + Static HTML on Apache Tomcat with SSL-secured MySQL RDS. Real troubleshooting done.
 
-## 🏗️ Architecture
-![Architecture](architecture.png)
+👉 **[View the live interactive architecture diagram →](https://shubham00492.github.io/aws-junior-portfolio/Project-04-tomcat-rds-deployment/)**
 
 **Flow:** User -> EC2 (Amazon Linux 2023 + Tomcat 9.0.117 :8080) -> WAR + HTML -> SSL JDBC -> RDS MySQL (studentapp DB)
 
