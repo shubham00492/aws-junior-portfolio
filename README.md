@@ -8,10 +8,11 @@ Hands-on AWS projects, each documented with the architecture, the exact steps ta
 
 | # | Project | What it covers | Tech |
 |---|---------|-----------------|------|
-| 01 | [Ice Cream S3 Website](./project-01-icecream-s3-website) | Static website hosting on S3 | S3, Static Web Hosting |
+| 01 | [Ice Cream S3 Website](./project-01-Icecream-s3-website) | Static website hosting on S3 | S3, Static Web Hosting |
 | 02 | [Secure S3 Storage](./project-02-secure-s3-storage) | Locking down S3 storage for company data — bucket policies, encryption, access control | S3, IAM, Bucket Policies |
-| 03 | [VPC Manual Setup](./project-03-vpc-manual) | Building a VPC by hand — subnets, route tables, gateways | VPC, Networking |
-| 04 | [Tomcat + RDS Deployment](./project-04-tomcat-rds-deployment) | 2-tier Java app on EC2/Tomcat with an SSL-secured RDS MySQL backend | EC2, RDS, Tomcat, JDBC |
+| 03 | [VPC Manual Setup](./project-03-VPC-manual) | Building a VPC by hand — subnets, route tables, gateways | VPC, Networking |
+| 04 | [Tomcat + RDS Deployment](./project-04-Tomcat-rds-deployment) | 2-tier Java app on EC2/Tomcat with an SSL-secured RDS MySQL backend | EC2, RDS, Tomcat, JDBC |
+ | 05 | [Auto Scaling + ALB](./project-05-asg-alb-deployment) | Highly-available web tier with EC2 Auto Scaling and Application Load Balancer | EC2, ASG, ALB |
 
 Each project folder has its own README with the full write-up, an architecture diagram, and screenshots.
 
