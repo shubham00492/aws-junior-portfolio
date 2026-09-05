@@ -26,4 +26,4 @@
 - Shows Tomcat can serve both Dynamic (student.war) + Static (HTML)
 - URL: `http://<EC2-IP>:8080/` -> HTML, `http://<EC2-IP>:8080/student` -> Java App
 ```bash
-cp index.htm /opt/apache-tomcat-9.0.117/webapps/ROOT/index.html
+cp index.html /opt/apache-tomcat-9.0.117/webapps/ROOT/index.html
