@@ -1,3 +1,4 @@
+
 # Project 04 - 2-Tier Java App | EC2 + RDS + Tomcat• Deployed Java web application on Apache Tomcat 9.x on AWS EC2 (Amazon Linux 2023)
 • Configured AWS RDS MySQL as backend with SSL-enforced secure connectivity
 • Deployed student.war artifact and integrated MySQL Connector JAR for DB-app communication
