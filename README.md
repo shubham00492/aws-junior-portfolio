@@ -2,7 +2,7 @@
 
 Hands-on AWS projects, each documented with the architecture, the exact steps taken, issues hit along the way, and what I learned. Built to demonstrate practical cloud/DevOps skills rather than just certifications.
 
-📫 [www.linkedin.com/in/shubham-jain-868a11352](#) · 📄 [Resume](#)
+📫 [LinkedIn- Shubham Jain][www.linkedin.com/in/shubham-jain-868a11352](https://www.linkedin.com/in/shubham-jain-868a11352/)](#) · 📄 [Resume](#)
 
 ## Projects
 
