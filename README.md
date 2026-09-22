@@ -15,12 +15,19 @@ Hands-on AWS projects, each documented with the architecture, the exact steps ta
 | 05 | [Auto Scaling + ALB](./project-05-asg-alb-deployment) | Highly-available web tier with EC2 Auto Scaling and Application Load Balancer | EC2, ASG, ALB |
 | 06 | [Terraform 3-Tier AWS VPC](./project-06-3tier) | Full 3-tier architecture (VPC, ALB, ASG, RDS) provisioned end-to-end with Terraform — IaC version of Project 03 | Terraform, VPC, ALB, ASG, RDS |
 | 07 | [Serverless CSV Pipeline - S3 → Lambda → DynamoDB](https://github.com/shubham00492/aws-serverless-csv-pipeline) | Event-driven pipeline: CSV upload to S3 auto-triggers Lambda to parse and store in DynamoDB. Fixed AccessDenied & case-sensitive table issues, verified via CloudWatch | S3, Lambda (Python), DynamoDB, IAM Least-Privilege, CloudWatch, SNS |
+| 08 | [Terraform EC2 with S3 Backend + DynamoDB Locking](./project-08-terraform-ec2-s3-dynamo) | EC2 instance provisioned with a fully variable-driven Terraform config; migrated state from local to a remote S3 backend and added DynamoDB-based state locking to prevent concurrent-apply conflicts | Terraform, EC2, S3 (Remote State), DynamoDB (State Locking), IAM |
 
 Each project folder has its own README with the full write-up, an architecture diagram, and screenshots. Project 07 is a standalone repo with live proof (Account: 320042237934, CloudWatch `File mili: test.csv → Done`).
 
 ## Project Highlights
 
-**Latest: Project 07 - Serverless**
+**Latest: Project 08 - Terraform Remote State & Locking**
+- Moved from local `.tfstate` to a shared, team-safe **S3 backend**
+- Added **DynamoDB** table with the required `LockID` partition key to prevent two people from corrupting state by running `apply` at the same time
+- Fully parameterized config (`variable.tf` + `var.*` references) — no hardcoded AMI, region, or instance type
+- Standard workflow practiced end-to-end: `init` → `fmt` → `validate` → `plan` → `apply`, verified via AWS Console + `terraform state show`
+
+**Project 07 - Serverless**
 - Zero-server, pay-per-use
 - Real debugging: `AccessDenied` (S3 policy), `ResourceNotFoundException` (DynamoDB case-sensitivity: `Processedrecords` vs `ProcessedRecords`)
 - Production thinking: 1-bucket MVP → 2-bucket pattern (raw + processed) to avoid re-trigger loops
